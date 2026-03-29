@@ -13,7 +13,6 @@ export default function Footer() {
     ],
     links: [
       { label: lang === 'ar' ? 'قصص النجاح' : 'Success Stories', href: '/results' },
-      { label: lang === 'ar' ? 'عن الفريق' : 'Our Team', href: '/#support' },
       { label: lang === 'ar' ? 'المدونة' : 'Blog', href: '/blog' },
       { label: lang === 'ar' ? 'تواصل معنا' : 'Contact Us', href: 'https://wa.me/966500000000', external: true },
     ],
