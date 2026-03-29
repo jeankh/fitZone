@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, ArrowLeft, ArrowRight, Package, BookOpen, ShoppingCart, Star, MessageCircle, Zap, Lock, Plus } from 'lucide-react'
+import { Check, ArrowLeft, ArrowRight, Package, BookOpen, ShoppingCart, Star, MessageCircle, Gift, Zap, Lock, Plus } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useLanguage } from '../context/LanguageContext'
@@ -439,7 +439,7 @@ export default function BooksPage() {
                 <div className="w-full rounded-2xl overflow-hidden border border-[#25d366]/30" style={{ background: 'linear-gradient(135deg, #0d2e1e 0%, #0a2318 100%)' }}>
                   <div className="flex items-center gap-3 px-4 py-3 border-b border-[#25d366]/15">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #25d366, #128c7e)', boxShadow: '0 4px 12px rgba(37,211,102,0.4)' }}>
-                      <MessageCircle size={16} color="white" />
+                      <Gift size={16} color="white" />
                     </div>
                     <p className="text-[#4ade80] text-sm font-bold leading-snug">
                       {lang === 'ar' ? 'متابعة شخصية عبر الواتساب' : 'Personal WhatsApp Support'}

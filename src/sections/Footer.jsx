@@ -9,7 +9,6 @@ export default function Footer() {
     books: [
       { label: lang === 'ar' ? 'خطة التحول الشامل' : 'Transformation Plan', href: '/programs', bookId: 'transformation' },
       { label: lang === 'ar' ? 'دليل التغذية' : 'Nutrition Guide', href: '/programs', bookId: 'nutrition' },
-      { label: lang === 'ar' ? 'دليل التمارين' : 'Exercise Guide', href: '/programs', bookId: 'workout' },
       { label: lang === 'ar' ? 'الباقة الكاملة' : 'Complete Bundle', href: '/programs', bookId: 'bundle' },
     ],
     links: [
