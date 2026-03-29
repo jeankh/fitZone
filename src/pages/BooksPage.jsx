@@ -44,7 +44,7 @@ const books = [
 ]
 
 const bundle = {
-  id: 'workout',
+  id: 'bundle',
   title: { ar: 'الباقة الكاملة', en: 'Complete Bundle' },
   subtitle: { ar: 'تدريب + تغذية + متابعة واتساب شهر كامل', en: 'Training + Nutrition + WhatsApp Support for a Full Month' },
   valueProps: {
@@ -265,9 +265,6 @@ export default function BooksPage() {
                 <div className="flex items-center gap-3 px-4 py-3 border-t border-border bg-white/[0.02]">
                   <div className="flex items-baseline gap-1.5 flex-shrink-0">
                     <span className="text-white text-2xl font-extrabold">{formatPrice(book.price, lang)}</span>
-                    <span className="bg-accent-green/15 text-accent-green text-[10px] font-bold px-1.5 py-0.5 rounded">
-                      -{discount(book.price, book.originalPrice)}%
-                    </span>
                   </div>
                   <motion.button
                     whileTap={{ scale: 0.97 }}
@@ -331,10 +328,6 @@ export default function BooksPage() {
                   <div className="border-t border-border pt-4">
                     <div className="flex items-center gap-2 mb-4 flex-wrap">
                       <span className="text-white text-2xl font-extrabold">{formatPrice(book.price, lang)}</span>
-                      <span className="text-text-muted text-sm line-through">{formatPrice(book.originalPrice, lang)}</span>
-                      <span className="bg-accent-green/15 text-accent-green text-xs font-bold px-2 py-0.5 rounded-md">
-                        -{discount(book.price, book.originalPrice)}%
-                      </span>
                     </div>
                     <div className="flex gap-3">
                       <motion.button
@@ -505,26 +498,10 @@ export default function BooksPage() {
                   {/* Price row */}
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-white text-5xl font-extrabold tracking-tight">{formatPrice(bundle.price, lang)}</span>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-text-muted line-through text-xs">{formatPrice(bundle.originalPrice, lang)}</span>
-                    </div>
                     <div className="flex flex-col gap-1 ms-auto">
-                      <span className="bg-accent-green/15 text-accent-green text-xs font-bold px-2.5 py-1 rounded-lg border border-accent-green/20 text-center">
-                        -{discount(bundle.price, bundle.originalPrice)}%
-                      </span>
-                      <span className="text-accent-green text-xs font-bold text-center">
-                        {lang === 'ar' ? `وفّر ${formatPrice(bundle.originalPrice - bundle.price, lang)}` : `Save ${formatPrice(bundle.originalPrice - bundle.price, lang)}`}
-                      </span>
                     </div>
                   </div>
 
-                  {/* Urgency strip */}
-                  <div className="flex items-center gap-2 bg-brand/8 border border-brand/20 rounded-xl px-3 py-2">
-                    <Zap size={13} className="text-brand flex-shrink-0" />
-                    <span className="text-brand text-xs font-bold">
-                      {lang === 'ar' ? 'العرض محدود — السعر يرتفع قريباً' : 'Limited offer — price increases soon'}
-                    </span>
-                  </div>
 
                   {/* CTAs */}
                   <motion.button
@@ -537,22 +514,20 @@ export default function BooksPage() {
                     <Arrow size={18} className={`transition-transform ${lang === 'ar' ? 'group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
                   </motion.button>
 
-                  <div className="flex gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAddToCart(bundle)}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border font-semibold transition-all text-sm ${
-                        isInCart(bundle.id) ? 'bg-brand/10 border-brand text-brand' : 'border-border text-text-secondary hover:border-brand/40 hover:text-white'
-                      }`}
-                    >
-                      <ShoppingCart size={15} />
-                      <span>{isInCart(bundle.id) ? (lang === 'ar' ? 'في السلة' : 'In Cart') : (lang === 'ar' ? 'أضف للسلة' : 'Add to Cart')}</span>
-                    </motion.button>
-                    <div className="flex items-center gap-1.5 text-text-muted text-[11px] leading-relaxed max-w-[180px]">
-                      <Lock size={10} className="flex-shrink-0" />
-                      <span>{lang === 'ar' ? 'دفع آمن · ضمان استرداد 7 أيام' : 'Secure pay · 7-day refund'}</span>
-                    </div>
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleAddToCart(bundle)}
+                    className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border font-semibold transition-all text-sm ${
+                      isInCart(bundle.id) ? 'bg-brand/10 border-brand text-brand' : 'border-border text-text-secondary hover:border-brand/40 hover:text-white'
+                    }`}
+                  >
+                    <ShoppingCart size={16} />
+                    <span>{isInCart(bundle.id) ? (lang === 'ar' ? 'في السلة ✓' : 'In Cart ✓') : (lang === 'ar' ? 'أضف للسلة' : 'Add to Cart')}</span>
+                  </motion.button>
+                  <div className="flex items-center justify-center gap-1.5 text-text-muted text-xs">
+                    <Lock size={11} className="flex-shrink-0" />
+                    <span>{lang === 'ar' ? 'دفع آمن · ضمان استرداد 7 أيام' : 'Secure pay · 7-day refund'}</span>
                   </div>
                 </div>
               </div>

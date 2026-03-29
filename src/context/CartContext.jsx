@@ -1,30 +1,36 @@
 import { createContext, useContext, useState } from 'react'
 
+const INDIVIDUAL_BOOKS = ['transformation', 'nutrition']
+const BUNDLE_ID = 'bundle'
+const BUNDLE_PRICE = 149
+
 const BOOKS_DATA = {
   transformation: {
     id: 'transformation',
     icon: '💪',
-    titleAr: 'خطة التحول الشامل',
-    titleEn: 'Complete Transformation Plan',
-    price: 149,
+    image: '/fitzone-workout.jpeg',
+    titleAr: 'الدليل الشامل للتنشيف وبناء الجسم',
+    titleEn: 'Complete Shredding & Building Guide',
+    price: 79,
   },
   nutrition: {
     id: 'nutrition',
     icon: '🥗',
-    titleAr: 'دليل التغذية الشامل',
-    titleEn: 'Complete Nutrition Guide',
+    image: '/fitzone-nutrition.jpeg',
+    titleAr: 'الدليل الكامل لخسارة الدهون',
+    titleEn: 'Complete Fat Loss Guide',
     price: 79,
   },
-  workout: {
-    id: 'workout',
-    icon: '🏋️',
-    titleAr: 'دليل التمارين المصور',
-    titleEn: 'Illustrated Exercise Guide',
-    price: 79,
+  bundle: {
+    id: 'bundle',
+    icon: '🎁',
+    image: '/fitzone-workout.jpeg',
+    image2: '/fitzone-nutrition.jpeg',
+    titleAr: 'الباقة الكاملة',
+    titleEn: 'Complete Bundle',
+    price: BUNDLE_PRICE,
   },
 }
-
-const BUNDLE_PRICE = 219
 
 const CartContext = createContext()
 
@@ -32,36 +38,59 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [wasAutoUpgraded, setWasAutoUpgraded] = useState(false)
 
   const addToCart = (item) => {
-    // Accept either a full item object or just an id string
     const id = typeof item === 'string' ? item : item.id
-    if (!cart.includes(id)) {
-      setCart(prev => [...prev, id])
-    }
+
+    setCart(prev => {
+      if (prev.includes(id)) return prev
+
+      // Adding bundle directly → no upgrade banner
+      if (id === BUNDLE_ID) {
+        setWasAutoUpgraded(false)
+        return [BUNDLE_ID]
+      }
+
+      const next = [...prev, id]
+
+      // If both individual books are now in cart → auto-upgrade to bundle
+      const hasAll = INDIVIDUAL_BOOKS.every(b => next.includes(b))
+      if (hasAll) {
+        setWasAutoUpgraded(true)
+        return [BUNDLE_ID]
+      }
+
+      setWasAutoUpgraded(false)
+      return next
+    })
   }
 
   const removeFromCart = (id) => {
+    setWasAutoUpgraded(false)
     setCart(prev => prev.filter(item => item !== id))
   }
 
-  const clearCart = () => {
-    setCart([])
-  }
+  const clearCart = () => setCart([])
 
-  const isInCart = (id) => {
-    return cart.includes(id)
-  }
+  const isInCart = (id) => cart.includes(id)
 
-  const getTotal = () => {
-    if (cart.length === 3) return BUNDLE_PRICE
-    return cart.reduce((sum, id) => sum + (BOOKS_DATA[id]?.price || 0), 0)
-  }
+  const getTotal = () =>
+    cart.reduce((sum, id) => sum + (BOOKS_DATA[id]?.price || 0), 0)
 
   const getSavings = () => {
-    if (cart.length < 3) return 0
-    const fullPrice = cart.reduce((sum, id) => sum + (BOOKS_DATA[id]?.price || 0), 0)
-    return fullPrice - BUNDLE_PRICE
+    if (!cart.includes(BUNDLE_ID)) return 0
+    // Bundle saves vs buying both individually
+    const individualTotal = INDIVIDUAL_BOOKS.reduce((sum, id) => sum + BOOKS_DATA[id].price, 0)
+    return individualTotal - BUNDLE_PRICE
+  }
+
+  // Which individual book is missing (for upsell suggestion)
+  const getMissingBook = () => {
+    if (cart.includes(BUNDLE_ID)) return null
+    const inCart = INDIVIDUAL_BOOKS.filter(id => cart.includes(id))
+    if (inCart.length !== 1) return null
+    return INDIVIDUAL_BOOKS.find(id => !cart.includes(id))
   }
 
   const openCheckout = () => {
@@ -78,6 +107,8 @@ export function CartProvider({ children }) {
       isInCart,
       getTotal,
       getSavings,
+      getMissingBook,
+      wasAutoUpgraded,
       isCartOpen,
       setIsCartOpen,
       isCheckoutOpen,
