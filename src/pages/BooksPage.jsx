@@ -20,7 +20,6 @@ const books = [
       en: ['Full training program explained', 'Exercises with tutorial videos', 'Cardio: when, how & how much?', '30-day rapid shredding challenge', "The secret trainers don't share"],
     },
     price: 79,
-    originalPrice: 99,
     rating: 4.9,
     downloads: '1500+',
   },
@@ -37,7 +36,6 @@ const books = [
       en: ['The golden rule of fat loss', 'Meal plan (3, 4, or 5 meals/day)', 'Weekly meal plan & shopping list', 'Cheat meal guide — enjoy without guilt'],
     },
     price: 79,
-    originalPrice: 99,
     rating: 4.8,
     downloads: '2000+',
   },
@@ -52,7 +50,6 @@ const bundle = {
     en: ['Full shredding & building guide content', 'Full fat loss guide content', '30-day rapid shredding challenge', 'Personal WhatsApp follow-up for 1 month', 'Clear step-by-step roadmap'],
   },
   price: 149,
-  originalPrice: 199,
   rating: 4.9,
   downloads: '3000+',
 }
@@ -180,7 +177,6 @@ export default function BooksPage() {
   }
 
   const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight
-  const discount = (price, original) => Math.round((1 - price / original) * 100)
 
   return (
     <div className="pt-28 pb-20">
