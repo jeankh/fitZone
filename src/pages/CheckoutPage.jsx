@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ArrowLeft, CreditCard, Smartphone, Building2, Lock, Trash2, CheckCircle, ShoppingCart, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
-import { useCart } from '../context/CartContext'
+import { useCart, trackEvent } from '../context/CartContext'
 import { useCurrency } from '../context/CurrencyContext'
 
 const paymentMethods = [
@@ -177,6 +177,8 @@ export default function CheckoutPage() {
     await new Promise(resolve => setTimeout(resolve, 2500))
     setIsProcessing(false)
     setIsSuccess(true)
+    trackEvent('purchases')
+    if (typeof window.gtag === 'function') window.gtag('event', 'purchase', { value: finalTotal, currency: 'SAR' })
     clearCart()
   }
 

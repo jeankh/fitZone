@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react'
 const INDIVIDUAL_BOOKS = ['transformation', 'nutrition']
 const BUNDLE_ID = 'bundle'
 
-const BOOKS_DATA = {
+export const BOOKS_DATA = {
   transformation: {
     id: 'transformation',
     icon: '💪',
@@ -34,6 +34,18 @@ const BOOKS_DATA = {
   },
 }
 
+// ── Event tracking ──────────────────────────────────────────────────────────
+const EVENT_KEY = 'fitzone_events'
+const EVENT_DEFAULTS = { cart_adds: 0, bundle_upgrades: 0, checkout_starts: 0, purchases: 0 }
+
+export function trackEvent(key) {
+  try {
+    const stored = JSON.parse(localStorage.getItem(EVENT_KEY) || '{}')
+    const updated = { ...EVENT_DEFAULTS, ...stored, [key]: ((stored[key] || 0) + 1) }
+    localStorage.setItem(EVENT_KEY, JSON.stringify(updated))
+  } catch {}
+}
+
 const CartContext = createContext()
 
 export function CartProvider({ children }) {
@@ -45,27 +57,34 @@ export function CartProvider({ children }) {
   const addToCart = (item) => {
     const id = typeof item === 'string' ? item : item.id
 
-    setCart(prev => {
-      if (prev.includes(id)) return prev
+    // Guard: already in cart
+    if (cart.includes(id)) return
 
-      // Adding bundle directly → no upgrade banner
-      if (id === BUNDLE_ID) {
-        setWasAutoUpgraded(false)
-        return [BUNDLE_ID]
-      }
-
-      const next = [...prev, id]
-
-      // If both individual books are now in cart → auto-upgrade to bundle
-      const hasAll = INDIVIDUAL_BOOKS.every(b => next.includes(b))
-      if (hasAll) {
-        setWasAutoUpgraded(true)
-        return [BUNDLE_ID]
-      }
-
+    // Adding bundle directly → no upgrade banner
+    if (id === BUNDLE_ID) {
       setWasAutoUpgraded(false)
-      return next
-    })
+      setCart([BUNDLE_ID])
+      trackEvent('cart_adds')
+      if (typeof window.gtag === 'function') window.gtag('event', 'add_to_cart', { item_id: id, value: BOOKS_DATA[id]?.price })
+      return
+    }
+
+    const next = [...cart, id]
+    const hasAll = INDIVIDUAL_BOOKS.every(b => next.includes(b))
+
+    if (hasAll) {
+      // Auto-upgrade to bundle
+      setWasAutoUpgraded(true)
+      setCart([BUNDLE_ID])
+      trackEvent('cart_adds')
+      trackEvent('bundle_upgrades')
+      if (typeof window.gtag === 'function') window.gtag('event', 'add_to_cart', { item_id: BUNDLE_ID, value: BOOKS_DATA.bundle.price })
+    } else {
+      setWasAutoUpgraded(false)
+      setCart(next)
+      trackEvent('cart_adds')
+      if (typeof window.gtag === 'function') window.gtag('event', 'add_to_cart', { item_id: id, value: BOOKS_DATA[id]?.price })
+    }
   }
 
   const removeFromCart = (id) => {
@@ -89,6 +108,8 @@ export function CartProvider({ children }) {
   }
 
   const openCheckout = () => {
+    trackEvent('checkout_starts')
+    if (typeof window.gtag === 'function') window.gtag('event', 'begin_checkout', { value: getTotal(), currency: 'SAR' })
     setIsCartOpen(false)
     setIsCheckoutOpen(true)
   }
