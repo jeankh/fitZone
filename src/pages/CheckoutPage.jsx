@@ -62,7 +62,7 @@ export default function CheckoutPage() {
   const navigate = useNavigate()
   const { lang } = useLanguage()
   const { formatPrice } = useCurrency()
-  const { cart, removeFromCart, clearCart, getTotal, getSavings, BOOKS_DATA } = useCart()
+  const { cart, removeFromCart, clearCart, getTotal, BOOKS_DATA } = useCart()
 
   const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight
 
@@ -256,8 +256,6 @@ export default function CheckoutPage() {
   }
 
   const finalTotal = getTotal()
-  const bundleDiscount = getSavings()
-  const subtotal = finalTotal + bundleDiscount
 
   return (
     <div className="pt-24 pb-16 min-h-screen">
@@ -308,12 +306,6 @@ export default function CheckoutPage() {
                   </div>
                 )
               })}
-              {bundleDiscount > 0 && (
-                <div className="flex justify-between text-accent-green text-sm pt-3">
-                  <span>{lang === 'ar' ? 'خصم الباقة' : 'Bundle Discount'}</span>
-                  <span>-{formatPrice(bundleDiscount, lang)}</span>
-                </div>
-              )}
             </div>
           </details>
         </div>
@@ -370,20 +362,8 @@ export default function CheckoutPage() {
               </div>
 
               {/* Totals */}
-              <div className="space-y-3 pt-4 border-t border-border">
-                <div className="flex justify-between text-text-secondary">
-                  <span>{lang === 'ar' ? 'المجموع الفرعي' : 'Subtotal'}</span>
-                  <span>{formatPrice(subtotal, lang)}</span>
-                </div>
-
-                {bundleDiscount > 0 && (
-                  <div className="flex justify-between text-accent-green">
-                    <span>{lang === 'ar' ? 'خصم الباقة' : 'Bundle Discount'}</span>
-                    <span>-{formatPrice(bundleDiscount, lang)}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between text-xl font-bold pt-3 border-t border-border">
+              <div className="pt-4 border-t border-border">
+                <div className="flex justify-between text-xl font-bold">
                   <span>{lang === 'ar' ? 'الإجمالي' : 'Total'}</span>
                   <span className="text-brand">{formatPrice(finalTotal, lang)}</span>
                 </div>

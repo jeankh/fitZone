@@ -5,14 +5,13 @@ import { useCart } from '../context/CartContext'
 import { useLanguage } from '../context/LanguageContext'
 
 export default function CheckoutModal() {
-  const { 
-    cart, 
-    getTotal, 
-    getSavings,
-    isCheckoutOpen, 
+  const {
+    cart,
+    getTotal,
+    isCheckoutOpen,
     setIsCheckoutOpen,
     clearCart,
-    BOOKS_DATA 
+    BOOKS_DATA
   } = useCart()
   const { lang } = useLanguage()
   
@@ -173,12 +172,6 @@ export default function CheckoutModal() {
                       )
                     })}
                   </div>
-                  {getSavings() > 0 && (
-                    <div className="flex items-center justify-between text-sm text-accent-green border-t border-border pt-2 mb-2">
-                      <span>{lang === 'ar' ? 'خصم الباقة' : 'Bundle Discount'}</span>
-                      <span>-{getSavings()} {lang === 'ar' ? 'ر.س' : 'SAR'}</span>
-                    </div>
-                  )}
                   <div className="flex items-center justify-between font-bold pt-2 border-t border-border">
                     <span className="text-white">{lang === 'ar' ? 'المجموع' : 'Total'}</span>
                     <span className="text-brand text-xl">{getTotal()} {lang === 'ar' ? 'ر.س' : 'SAR'}</span>
