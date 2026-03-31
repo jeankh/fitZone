@@ -20,15 +20,15 @@ const chatMessages = [
 ]
 
 export default function WhatsAppSection() {
-  const { lang, t } = useLanguage()
+  const { lang } = useLanguage()
   const navigate = useNavigate()
   const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight
 
   return (
     <section id="support" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
+      {/* Background — lighter, no heavy blur on mobile */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#25d366]/[0.03] to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#25d366]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#25d366]/4 rounded-full blur-[80px] pointer-events-none hidden lg:block" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -38,11 +38,11 @@ export default function WhatsAppSection() {
             initial={{ opacity: 0, x: lang === 'ar' ? 30 : -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-[#25d366]/10 border border-[#25d366]/25 px-5 py-2 rounded-full mb-6">
-              <span className="w-2 h-2 bg-[#25d366] rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-[#25d366] rounded-full" />
               <MessageCircle size={14} className="text-[#25d366]" />
               <span className="text-[#25d366] text-sm font-semibold">
                 {lang === 'ar' ? 'متابعة شخصية' : 'Personal Support'}
@@ -64,41 +64,35 @@ export default function WhatsAppSection() {
             {/* Feature cards */}
             <div className="grid grid-cols-2 gap-3 mb-10">
               {features.map((feature, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className="flex items-center gap-3 bg-white/[0.03] border border-[#25d366]/15 rounded-2xl px-4 py-3.5 hover:border-[#25d366]/35 hover:bg-[#25d366]/5 transition-all"
+                  className="flex items-center gap-3 bg-white/[0.03] border border-[#25d366]/15 rounded-2xl px-4 py-3.5"
                 >
                   <div className="w-8 h-8 bg-[#25d366]/15 rounded-xl flex items-center justify-center flex-shrink-0">
                     <feature.icon size={15} className="text-[#25d366]" />
                   </div>
                   <span className="text-white/90 text-sm font-medium leading-snug">{lang === 'ar' ? feature.ar : feature.en}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             {/* CTA */}
-            <motion.button
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => navigate('/programs')}
-              className="flex items-center gap-3 bg-[#25d366] text-white px-8 py-4 rounded-2xl text-base font-bold shadow-lg shadow-[#25d366]/25 hover:bg-[#20bd5a] hover:shadow-[#25d366]/40 transition-all group"
+              className="flex items-center gap-3 bg-[#25d366] text-white px-8 py-4 rounded-2xl text-base font-bold shadow-lg shadow-[#25d366]/25 hover:bg-[#20bd5a] transition-colors"
             >
               <MessageCircle size={18} />
               <span>{lang === 'ar' ? 'احصل على المتابعة الشخصية' : 'Get Personal Support'}</span>
-              <Arrow size={16} className={`transition-transform ${lang === 'ar' ? 'group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
-            </motion.button>
+              <Arrow size={16} />
+            </button>
           </motion.div>
 
-          {/* ── Phone Mockup ── */}
+          {/* ── Phone Mockup (static — no per-message animations) ── */}
           <motion.div
             initial={{ opacity: 0, x: lang === 'ar' ? -30 : 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             className="flex justify-center"
           >
             <div className="relative w-72">
@@ -131,15 +125,11 @@ export default function WhatsAppSection() {
                   <MessageCircle size={16} className="text-white/30" />
                 </div>
 
-                {/* Chat area */}
-                <div className="bg-[#0b141a] p-3 space-y-2.5 min-h-[300px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(37,211,102,0.04) 0%, transparent 50%)' }}>
+                {/* Chat area — fully static */}
+                <div className="bg-[#0b141a] p-3 space-y-2.5 min-h-[300px]">
                   {chatMessages.map((msg, i) => (
-                    <motion.div
+                    <div
                       key={i}
-                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: i * 0.12 }}
                       className={`flex ${msg.from === 'team' ? 'justify-start' : 'justify-end'}`}
                     >
                       <div className={`max-w-[82%] px-3.5 py-2 text-xs leading-relaxed shadow-sm ${
@@ -152,7 +142,7 @@ export default function WhatsAppSection() {
                           <span className="block text-[#25d366]/60 text-[9px] mt-0.5 text-end">✓✓</span>
                         )}
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
@@ -167,12 +157,8 @@ export default function WhatsAppSection() {
                 </div>
               </div>
 
-              {/* Floating badge — quick reply */}
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-5 -right-5 bg-surface border border-border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl z-10"
-              >
+              {/* Floating badge — quick reply (static) */}
+              <div className="absolute -top-5 -right-5 bg-surface border border-border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl z-10">
                 <div className="w-9 h-9 bg-[#25d366]/15 rounded-xl flex items-center justify-center text-base">
                   ⚡
                 </div>
@@ -180,14 +166,10 @@ export default function WhatsAppSection() {
                   <p className="text-white font-bold text-xs">{lang === 'ar' ? 'رد سريع' : 'Quick Reply'}</p>
                   <p className="text-text-muted text-[11px]">{lang === 'ar' ? 'خلال 24 ساعة' : 'Within 24h'}</p>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Floating badge — clients */}
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-                className="absolute -bottom-5 -left-5 bg-surface border border-border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl z-10"
-              >
+              {/* Floating badge — clients (static) */}
+              <div className="absolute -bottom-5 -left-5 bg-surface border border-border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl z-10">
                 <div className="w-9 h-9 bg-brand/15 rounded-xl flex items-center justify-center text-base">
                   🏆
                 </div>
@@ -195,7 +177,7 @@ export default function WhatsAppSection() {
                   <p className="text-white font-bold text-xs">{lang === 'ar' ? '+1000 عميل' : '1000+ Clients'}</p>
                   <p className="text-text-muted text-[11px]">{lang === 'ar' ? 'تابعناهم بنجاح' : 'Successfully supported'}</p>
                 </div>
-              </motion.div>
+              </div>
 
             </div>
           </motion.div>
