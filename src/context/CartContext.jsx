@@ -2,7 +2,6 @@ import { createContext, useContext, useState } from 'react'
 
 const INDIVIDUAL_BOOKS = ['transformation', 'nutrition']
 const BUNDLE_ID = 'bundle'
-const BUNDLE_PRICE = 149
 
 const BOOKS_DATA = {
   transformation: {
@@ -28,7 +27,10 @@ const BOOKS_DATA = {
     image2: '/fitzone-nutrition.jpeg',
     titleAr: 'الباقة الكاملة',
     titleEn: 'Complete Bundle',
-    price: BUNDLE_PRICE,
+    // Price = book 1 + book 2 (WhatsApp support is a free gift)
+    get price() {
+      return BOOKS_DATA.transformation.price + BOOKS_DATA.nutrition.price
+    },
   },
 }
 
@@ -78,13 +80,6 @@ export function CartProvider({ children }) {
   const getTotal = () =>
     cart.reduce((sum, id) => sum + (BOOKS_DATA[id]?.price || 0), 0)
 
-  const getSavings = () => {
-    if (!cart.includes(BUNDLE_ID)) return 0
-    // Bundle saves vs buying both individually
-    const individualTotal = INDIVIDUAL_BOOKS.reduce((sum, id) => sum + BOOKS_DATA[id].price, 0)
-    return individualTotal - BUNDLE_PRICE
-  }
-
   // Which individual book is missing (for upsell suggestion)
   const getMissingBook = () => {
     if (cart.includes(BUNDLE_ID)) return null
@@ -106,7 +101,6 @@ export function CartProvider({ children }) {
       clearCart,
       isInCart,
       getTotal,
-      getSavings,
       getMissingBook,
       wasAutoUpgraded,
       isCartOpen,

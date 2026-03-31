@@ -44,7 +44,7 @@ const bundle = {
     ar: ['كل محتوى دليل التنشيف وبناء الجسم', 'كل محتوى دليل خسارة الدهون', 'تحدي 30 يوم للتنشيف السريع', 'متابعة شخصية عبر الواتساب لمدة شهر', 'خطوات واضحة من البداية للنهاية'],
     en: ['Full shredding & building guide content', 'Full fat loss guide content', '30-day rapid shredding challenge', 'Personal WhatsApp follow-up for 1 month', 'Clear step-by-step roadmap'],
   },
-  price: 149,
+  price: 158,
   rating: 4.9,
   downloads: '3000+',
 }
